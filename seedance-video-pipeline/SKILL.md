@@ -1,6 +1,6 @@
 ---
 name: seedance-video-pipeline
-version: 1.0.0
+version: 1.1.0
 description: 数字人视频总控编排——把「提示词工程 → 选择提交通道 → 提交生成 → 轮询下载」串成一条可复用流水线。覆盖 Seedance 2.0/2.5 提示词分流、紫域AI/火山Ark/MaxForAI 三通道选型与提交、成本报账与常见坑。当用户要把脚本/口播做成数字人视频、从文案到成片、或在多个生成平台间选型时调用。
 ---
 
@@ -88,6 +88,24 @@ seedance-2-5-prompt-reviewer
 | 提交紫域 | `ziyu-video-submit` |
 | 提交 Ark | `seedance-ark-submit` / `seedance-2-0-ark` |
 | 提交 MaxForAI | `maxforai-video-submit` |
+
+## 交互式选型问卷（scripts/channel_quiz.py）
+
+把需求直接翻译成「通道 + 模型 + 预估费用 + 命令骨架」，省去手查决策树。两种用法：
+
+```bash
+# 1) 逐项问答（直接回车用默认 = 2.5 带音频 720p）
+python3 ~/.workbuddy/skills/seedance-video-pipeline/scripts/channel_quiz.py
+
+# 2) 一行出结果（CI / 快速选型）
+python3 ~/.workbuddy/skills/seedance-video-pipeline/scripts/channel_quiz.py \
+  --ver 2.5 --audio y --duration 15 --res 720p --perf n --budget normal
+```
+
+问卷维度：模型版本（2.0/2.5）、是否带音频/口型、时长（秒）、分辨率（720p/480p）、是否挂表演参考视频、预算倾向（质量优先/最便宜）。
+输出含：推荐通道、模型 ID、钥匙串条目、预估费用、命令骨架（占位符，flag 名以专项 skill 为准）、提交前卡点提醒。
+
+⚠️ 紫域/MaxForAI 档位持续漂移，问卷给出的是**决策树推荐值**，最终提交前仍需实拉对应 `/models` 接口确认。
 
 ## 交付物约定
 
