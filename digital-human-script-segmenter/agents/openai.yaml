@@ -1,0 +1,4 @@
+interface:
+  display_name: "数字人脚本切分"
+  short_description: "按人物语速安全切分口播并生成 Seedance 提示词"
+  default_prompt: "使用 $digital-human-script-segmenter 按人物语速切分这份数字人口播稿，并按需生成 Seedance 提示词。"

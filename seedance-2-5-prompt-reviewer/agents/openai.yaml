@@ -1,0 +1,4 @@
+interface:
+  display_name: "Seedance 2.5 提示词把关"
+  short_description: "审查并优化 Seedance 2.5 多模态视频提示词"
+  default_prompt: "使用 $seedance-2-5-prompt-reviewer 审查这份 Seedance 2.5 提示词，指出问题并给出修改方向。"
