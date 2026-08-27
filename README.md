@@ -1,20 +1,25 @@
 # Seedance 数字人视频工作流 Skills
 
-把「提示词 → 提交到紫域 AI / 火山方舟 Ark / MaxForAI 生成 Seedance 视频」的全流程拆成可复用 skill。
+把「提示词 → 选通道 → 提交到紫域 AI / 火山方舟 Ark / MaxForAI 生成 Seedance 视频 → 轮询下载」的全流程拆成可复用 skill。
 鉴权走 macOS 钥匙串，脚本运行时读取，**仓库不含任何 API Key / Token**。
+**许可证：MIT**（见 `LICENSE`）。仓库现为 **public**。
 
 ## 工作流总览
 
 ```
-口播/脚本 ──► 分段(segmenter) ──► 提示词工程(seedance) ──► 2.5 审查(reviewer)
-                                                        │
-                                          选通道提交 + 轮询下载
-              ┌─────────────────────────┼─────────────────────────┐
-           紫域 AI (ziyu)          火山 Ark (ark)            MaxForAI (maxforai)
+口播/脚本
+   │
+   ▼ [1] 分段          digital-human-script-segmenter
+   ▼ [2] 提示词工程     seedance（每镜两套：2.0 + 2.5，不互套）
+   ▼ [3] 2.5 提示词审查  seedance-2-5-prompt-reviewer
+   ▼ [4] 选通道+提交+下载  ► seedance-video-pipeline（总控编排）
+              ┌────────────────────────┼────────────────────────┐
+           紫域 AI (ziyu)          火山 Ark (ark)          MaxForAI (maxforai)
 ```
 
 | 环节 | Skill | 职责 |
 |---|---|---|
+| **总控编排** | `seedance-video-pipeline` | 串起四阶段、按决策树选通道、卡报账/防叠单等铁律 |
 | 提示词工程（2.0/2.5 分流、垫图规则） | `seedance` | 写 Seedance 图生视频提示词、控景别、定参考图角色 |
 | 2.5 提示词审查 | `seedance-2-5-prompt-reviewer` | 审 2.5 提示词短板（表演/口型/景别/时长） |
 | 口播/脚本分段 | `digital-human-script-segmenter` | 把中文口播按镜头、秒轴、参考图切分 |
